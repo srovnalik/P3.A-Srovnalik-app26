@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SROVNALIK FINANCE | Investiční Portál</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Minimalistické Záhlaví a Logo */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-placeholder {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        /* Stylizovaná ikona nahrazující logo podle zaslané předlohy */
+        .logo-icon {
+            font-size: 48px;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        header h1 {
+            font-size: 24px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888888;
+        }
+
+        /* Výpis produktů */
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background-color: #1a1a1a;
+            border: 1px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.3s;
+        }
+
+        .product-card:hover {
+            border-color: #444444;
+        }
+
+        .product-info h3 {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .product-info p {
+            color: #aaaaaa;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-selector input {
+            width: 60px;
+            background-color: #262626;
+            border: 1px solid #3d3d3d;
+            color: #ffffff;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Souhrn objednávky (Košík) */
+        .summary-box {
+            background-color: #1a1a1a;
+            border: 1px solid #2d2d2d;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        .summary-box h2 {
+            font-size: 18px;
+            color: #ffffff;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #2d2d2d;
+            padding-bottom: 10px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 15px;
+            border-top: 1px solid #2d2d2d;
+            padding-top: 15px;
+        }
+
+        /* Kontaktní formulář */
+        .form-box {
+            background-color: #1a1a1a;
+            border: 1px solid #2d2d2d;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        .form-box h2 {
+            font-size: 18px;
+            color: #ffffff;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #2d2d2d;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888888;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            background-color: #262626;
+            border: 1px solid #3d3d3d;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Tlačítko Odeslat */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: #ffffff;
+            color: #121212;
+            border: none;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #cccccc;
+        }
+
+        .error-msg {
+            color: #ff5555;
+            font-size: 13px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-placeholder">
+            <div class="logo-icon">📊</div>
+        </div>
+        <h1>Srovnalik</h1>
+        <p>Finance</p>
+    </header>
+
+    <div class="products-grid" id="products-container">
+        <p style="text-align: center; color: #888;">Načítám investiční balíčky...</p>
+    </div>
+
+    <div class="summary-box">
+        <h2>Souhrn objednávky</h2>
+        <div class="summary-row">
+            <span>Počet objednaných kusů:</span>
+            <span id="total-count">0 ks</span>
+        </div>
+        <div class="summary-row total">
+            <span>Celková cena:</span>
+            <span id="total-price">0 Kč</span>
+        </div>
+    </div>
+
+    <div class="form-box">
+        <h2>Kontaktní údaje</h2>
+        <div class="form-group">
+            <label for="client-name">Jméno a Příjmení</label>
+            <input type="text" id="client-name" value="Kryštof Srovnalík" required>
+        </div>
+        <div class="form-group">
+            <label for="client-email">E-mail</label>
+            <input type="email" id="client-email" value="srovnalik.krystof@gmail.com" required>
+        </div>
+        <div class="form-group">
+            <label for="client-phone">Telefon</label>
+            <input type="tel" id="client-phone" value="+420 702 675 236" required>
+        </div>
+    </div>
+
+    <button class="btn-submit" onclick="sendOrder()">Odeslat objednávku</button>
+    <div class="error-msg" id="error-box">Pro odeslání objednávky musíte vybrat alespoň jeden balíček a vyplnit formulář.</div>
+</div>
+
+<script>
+    let productsData = [];
+
+    // Funkce pro načtení a parsování externího souboru CSV
+    async function loadProducts() {
+        try {
+            const response = await fetch('produkty.csv');
+            const data = await response.text();
+            
+            const lines = data.split('\n');
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+
+            // Začínáme od indexu 1 (přeskočíme hlavičku CSV)
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                // Rozdělení řádku podle čárek
+                const columns = lines[i].split(',');
+                const product = {
+                    id: columns[0],
+                    name: columns[1],
+                    description: columns[2],
+                    price: parseInt(columns[3])
+                };
+                
+                productsData.push(product);
+
+                // Vytvoření HTML karty produktu
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div class="product-price">${product.price.toLocaleString('cs-CZ')} Kč</div>
+                    </div>
+                    <div class="quantity-selector">
+                        <input type="number" id="qty-${product.id}" min="0" value="0" onchange="calculateTotal()">
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        } catch (error) {
+            console.error('Chyba při načítání CSV:', error);
+            document.getElementById('products-container').innerHTML = '<p style="color: #ff5555;">Nepodařilo se načíst data z CSV.</p>';
+        }
+    }
+
+    // Výpočet souhrnné ceny a počtu kusů
+    function calculateTotal() {
+        let totalCount = 0;
+        let totalPrice = 0;
+
+        productsData.forEach(product => {
+            const qtyInput = document.getElementById(`qty-${product.id}`);
+            const qty = parseInt(qtyInput.value) || 0;
+            
+            if (qty > 0) {
+                totalCount += qty;
+                totalPrice += (qty * product.price);
+            }
+        });
+
+        document.getElementById('total-count').innerText = totalCount + ' ks';
+        document.getElementById('total-price').innerText = totalPrice.toLocaleString('cs-CZ') + ' Kč';
+        
+        return { totalCount, totalPrice };
+    }
+
+    // Sestavení rekapitulace a spuštění e-mailového klienta
+    function sendOrder() {
+        const { totalCount, totalPrice } = calculateTotal();
+        const name = document.getElementById('client-name').value.trim();
+        const email = document.getElementById('client-email').value.trim();
+        const phone = document.getElementById('client-phone').value.trim();
+        const errorBox = document.getElementById('error-box');
+
+        // Validace
+        if (totalCount === 0 || !name || !email || !phone) {
+            errorBox.style.display = 'block';
+            return;
+        }
+        errorBox.style.display = 'none';
+
+        // Sestavení seznamu objednaného zboží
+        let orderItemsText = '';
+        productsData.forEach(product => {
+            const qty = parseInt(document.getElementById(`qty-${product.id}`).value) || 0;
+            if (qty > 0) {
+                orderItemsText += `- ${product.name} (${qty}x) \n`;
+            }
+        });
+
+        // Sestavení textu e-mailu přesně podle zadání
+        const emailTo = "app@kostka-skola.cz";
+        const subject = encodeURIComponent(`Objednávka - SROVNALIK FINANCE`);
+        
+        const bodyText = `SUMARIZACE OBJEDNÁVKY\n` +
+                         `====================\n\n` +
+                         `Objednané zboží:\n${orderItemsText}\n` +
+                         `Počet kusů celkem: ${totalCount} ks\n` +
+                         `Celková cena: ${totalPrice} Kč\n\n` +
+                         `KONTAKTY NA ZÁKAZNÍKA:\n` +
+                         `---------------------\n` +
+                         `Jméno a příjmení: ${name}\n` +
+                         `E-mail: ${email}\n` +
+                         `Telefon: ${phone}\n`;
+
+        const body = encodeURIComponent(bodyText);
+
+        // Otevření lokálního e-mailového klienta (Outlook, Mail, atd.)
+        window.location.href = `mailto:${emailTo}?subject=${subject}&body=${body}`;
+    }
+
+    // Spuštění načtení produktů při otevření stránky
+    window.onload = loadProducts;
+</script>
+
+</body>
+</html>
