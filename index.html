@@ -275,27 +275,34 @@
     </main>
 
     <footer>
-        &copy; 2026 SROVNALIK FINANCE. Všechna práva variavována. Studentský projekt GitHub-Pages.
+        &copy; 2026 SROVNALIK FINANCE. Všechna práva vyhrazena. Studentský projekt GitHub-Pages.
     </footer>
 </div>
 
 <script>
+    // Bezpečný přímý zápis dat, aby se obešel problém s načítáním souborů na GitHubu
+    const csvDataMock = `id;name;description;price
+1;Startovací investiční balíček;Balíček pro začátečníky zahrnující bezpečnější investice ETF fondy a pravidelné malé vklady.;5000
+2;Studentský růstový balíček;Investiční plán pro studenty zaměřený na postupné budování financí na auto bydlení nebo cestování.;2000
+3;Konzervativní balíček;Balíček obsahující stabilní a méně rizikové investice například dluhopisy a dividendové akcie.;10000
+4;Premium Wealth balíček;Prémiová služba s individuální investiční strategií a správou větších finančních vkladů.;50000
+5;Pasivní příjem balíček;Investice zaměřené na pravidelný příjem pomocí dividend a dlouhodobého zhodnocení peněz.;15000
+6;Crypto & Tech balíček;Rizikovější investice do kryptoměn AI společností a technologických akcií.;8000
+7;Rodinný spořící balíček;Dlouhodobé spoření a investování financí pro děti a budoucí rodinné cíle.;4000
+8;FIRE balíček;Investiční plán zaměřený na dosažení finanční nezávislosti a možnost dřívějšího odchodu do důchodu.;25000
+9;VIP správa investic;Kompletní správa klientských financí investic a pravidelných financí.;100000`;
+
     let globalProducts = [];
 
-    async function initApp() {
+    function initApp() {
         try {
-            const res = await fetch('produkty.csv');
-            if (!res.ok) throw new Error("Nelze načíst soubor produkty.csv");
-            const rawData = await res.text();
-            
-            const lines = rawData.split('\n');
+            const lines = csvDataMock.split('\n');
             const target = document.getElementById('products-target');
             target.innerHTML = '';
 
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 
-                // ZMĚNA: Rozdělujeme řádky pomocí středníku (;) namísto čárky
                 const dataCells = lines[i].split(';');
                 if(dataCells.length < 4) continue;
 
@@ -324,10 +331,6 @@
             }
         } catch (err) {
             console.error(err);
-            document.getElementById('products-target').innerHTML = `
-                <div style="background: #2a1a1a; border: 1px solid #ff4444; padding: 20px; border-radius: 6px; text-align: center; color: #ff4444;">
-                    <strong>Chyba načítání dat:</strong> Ujistěte se, že máte na GitHubu vedle index.html nahraný i soubor přesně pojmenovaný <strong>produkty.csv</strong>!
-                </div>`;
         }
     }
 
