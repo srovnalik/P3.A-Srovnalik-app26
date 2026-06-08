@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SROVNALIK FINANCE | Investiční webová aplikace</title>
     <style>
-        /* Reset a základní styly v temném režimu */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -30,7 +29,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Sekce hlavičky s logem */
         header {
             text-align: center;
             padding-bottom: 30px;
@@ -45,20 +43,11 @@
             justify-content: center;
         }
 
-        /* Ošetření zobrazení loga */
         .app-logo {
             max-width: 220px;
             height: auto;
             display: block;
             margin: 0 auto 10px auto;
-        }
-
-        .brand-title {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            color: #ffffff;
         }
 
         .brand-subtitle {
@@ -69,7 +58,6 @@
             margin-top: 5px;
         }
 
-        /* Hlavní nadpisy sekcí */
         .section-title {
             font-size: 18px;
             text-transform: uppercase;
@@ -80,7 +68,6 @@
             border-left: 3px solid #ffffff;
         }
 
-        /* Grid pro investiční balíčky */
         .products-list {
             display: flex;
             flex-direction: column;
@@ -146,12 +133,6 @@
             font-weight: 600;
         }
 
-        .input-qty:focus {
-            border-color: #ffffff;
-            outline: none;
-        }
-
-        /* Moduly pro Souhrn a Data */
         .grid-meta {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -183,7 +164,6 @@
             margin-top: 15px;
         }
 
-        /* Formulářové prvky */
         .form-field {
             margin-bottom: 15px;
         }
@@ -205,17 +185,6 @@
             padding: 11px 14px;
             border-radius: 4px;
             font-size: 14px;
-            transition: border-color 0.2s;
-        }
-
-        .form-field input:focus {
-            border-color: #ffffff;
-            outline: none;
-        }
-
-        /* Odesílací tlačítko */
-        .submit-container {
-            text-align: center;
         }
 
         .action-button {
@@ -230,7 +199,6 @@
             letter-spacing: 3px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.2s;
         }
 
         .action-button:hover {
@@ -242,6 +210,7 @@
             font-size: 13px;
             margin-top: 15px;
             display: none;
+            text-align: center;
         }
 
         footer {
@@ -259,12 +228,168 @@
 <div class="wrapper">
     <header>
         <div class="brand-box">
-            <img src="./logo.png" alt="[ SROVNALIK FINANCE ]" class="app-logo" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
-            <div id="alt-title" style="display:none;" class="brand-title">Srovnalik</div>
+            <img src="./logo.png" alt="SROVNALIK FINANCE" class="app-logo">
             <div class="brand-subtitle">Finance & Investment Solutions</div>
         </div>
     </header>
 
     <main>
         <h2 class="section-title">Nabídka investičních balíčků</h2>
-        <div class="products-list" id="products-target
+        <div class="products-list" id="products-target">
+            </div>
+
+        <div class="grid-meta">
+            <div class="meta-panel">
+                <h2 class="section-title">Přehled pozic</h2>
+                <div class="meta-row">
+                    <span>Vybrané investiční plány:</span>
+                    <span id="display-count">0 ks</span>
+                </div>
+                <div class="meta-row highlight">
+                    <span>Celková investice:</span>
+                    <span id="display-price">0 Kč</span>
+                </div>
+            </div>
+
+            <div class="meta-panel">
+                <h2 class="section-title">Identifikace klienta</h2>
+                <div class="form-field">
+                    <label>Jméno a Příjmení</label>
+                    <input type="text" id="inp-name" value="Kryštof Srovnalík" required>
+                </div>
+                <div class="form-field">
+                    <label>Kontaktní E-mail</label>
+                    <input type="email" id="inp-email" value="srovnalik.krystof@gmail.com" required>
+                </div>
+                <div class="form-field">
+                    <label>Telefonní spojení</label>
+                    <input type="tel" id="inp-phone" value="+420 702 675 236" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-container">
+            <button class="action-button" onclick="processOrder()">Odeslat závaznou objednávku</button>
+            <div class="warning-text" id="warning-msg">Chyba: Vyberte alespoň 1 balíček a vyplňte kontakty.</div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 SROVNALIK FINANCE. Všechna práva vyhrazena. Studentský projekt GitHub-Pages.
+    </footer>
+</div>
+
+<script>
+    let globalProducts = [];
+
+    async function initApp() {
+        try {
+            const res = await fetch('produkty.csv');
+            if (!res.ok) throw new Error("Nelze načíst soubor produkty.csv");
+            const rawData = await res.text();
+            
+            const lines = rawData.split('\n');
+            const target = document.getElementById('products-target');
+            target.innerHTML = '';
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const dataCells = lines[i].split(',');
+                if(dataCells.length < 4) continue;
+
+                const item = {
+                    id: dataCells[0].trim(),
+                    name: dataCells[1].trim(),
+                    desc: dataCells[2].trim(),
+                    price: parseInt(dataCells[3].trim()) || 0
+                };
+                
+                globalProducts.push(item);
+
+                const row = document.createElement('div');
+                row.className = 'product-item';
+                row.innerHTML = `
+                    <div class="product-details">
+                        <h3>${item.name}</h3>
+                        <p>${item.desc}</p>
+                    </div>
+                    <div class="product-action">
+                        <div class="product-cost">${item.price.toLocaleString('cs-CZ')} Kč</div>
+                        <input type="number" class="input-qty" id="quantity-${item.id}" min="0" value="0" oninput="updateTotals()">
+                    </div>
+                `;
+                target.appendChild(row);
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('products-target').innerHTML = `
+                <div style="background: #2a1a1a; border: 1px solid #ff4444; padding: 20px; border-radius: 6px; text-align: center; color: #ff4444;">
+                    <strong>Chyba načítání dat:</strong> Ujistěte se, že máte na GitHubu vedle index.html nahraný i soubor přesně pojmenovaný <strong>produkty.csv</strong>!
+                </div>`;
+        }
+    }
+
+    function updateTotals() {
+        let totalPieces = 0;
+        let totalMoney = 0;
+
+        globalProducts.forEach(item => {
+            const qtyField = document.getElementById(`quantity-${item.id}`);
+            const qty = parseInt(qtyField.value) || 0;
+            
+            if (qty > 0) {
+                totalPieces += qty;
+                totalMoney += (qty * item.price);
+            }
+        });
+
+        document.getElementById('display-count').innerText = totalPieces + ' ks';
+        document.getElementById('display-price').innerText = totalMoney.toLocaleString('cs-CZ') + ' Kč';
+        
+        return { totalPieces, totalMoney };
+    }
+
+    function processOrder() {
+        const { totalPieces, totalMoney } = updateTotals();
+        const clientName = document.getElementById('inp-name').value.trim();
+        const clientEmail = document.getElementById('inp-email').value.trim();
+        const clientPhone = document.getElementById('inp-phone').value.trim();
+        const alertBox = document.getElementById('warning-msg');
+
+        if (totalPieces === 0 || !clientName || !clientEmail || !clientPhone) {
+            alertBox.style.display = 'block';
+            return;
+        }
+        alertBox.style.display = 'none';
+
+        let emailInventory = '';
+        globalProducts.forEach(item => {
+            const currentQty = parseInt(document.getElementById(`quantity-${item.id}`).value) || 0;
+            if (currentQty > 0) {
+                emailInventory += `- ${item.name} | Počet: ${currentQty}x\n`;
+            }
+        });
+
+        const targetEmail = "app@kostka-skola.cz";
+        const emailSubject = encodeURIComponent(`Nová objednávka - SROVNALIK FINANCE`);
+        
+        const mailBody = `SUMARIZACE OBJEDNÁVKY\n` +
+                         `----------------------------------------\n\n` +
+                         `Objednané investiční produkty:\n${emailInventory}\n` +
+                         `Celkový objem položek: ${totalPieces} ks\n` +
+                         `Výsledná kalkulace ceny: ${totalMoney} Kč\n\n` +
+                         `ÚDAJE O ZÁKAZNÍKOVI:\n` +
+                         `----------------------------------------\n` +
+                         `Jméno: ${clientName}\n` +
+                         `E-mail: ${clientEmail}\n` +
+                         `Telefon: ${clientPhone}\n`;
+
+        window.location.href = `mailto:${targetEmail}?subject=${emailSubject}&body=${encodeURIComponent(mailBody)}`;
+    }
+
+    window.onload = initApp;
+</script>
+
+</body>
+</html>
