@@ -275,7 +275,7 @@
     </main>
 
     <footer>
-        &copy; 2026 SROVNALIK FINANCE. Všechna práva vyhrazena. Studentský projekt GitHub-Pages.
+        &copy; 2026 SROVNALIK FINANCE. Všechna práva variavována. Studentský projekt GitHub-Pages.
     </footer>
 </div>
 
@@ -295,7 +295,8 @@
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 
-                const dataCells = lines[i].split(',');
+                // ZMĚNA: Rozdělujeme řádky pomocí středníku (;) namísto čárky
+                const dataCells = lines[i].split(';');
                 if(dataCells.length < 4) continue;
 
                 const item = {
