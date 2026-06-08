@@ -3,141 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SROVNALIK FINANCE | Investiční Portál</title>
+    <title>SROVNALIK FINANCE | Investiční webová aplikace</title>
     <style>
+        /* Reset a základní styly v temném režimu */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            padding: 40px 20px;
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            line-height: 1.6;
+            padding: 60px 20px;
+        }
+
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #111111;
+            border: 1px solid #2d2d2d;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Sekce hlavičky s logem */
+        header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #2d2d2d;
+            margin-bottom: 40px;
+        }
+
+        .brand-box {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-        }
-
-        /* Minimalistické Záhlaví a Logo */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo-container {
-            margin-bottom: 15px;
-        }
-
-        /* Stylování nahraného loga logo.png */
-        .logo-img {
-            max-width: 180px;
+        /* Ošetření zobrazení loga */
+        .app-logo {
+            max-width: 220px;
             height: auto;
-            display: inline-block;
+            display: block;
+            margin: 0 auto 10px auto;
         }
 
-        /* Výpis produktů */
-        .products-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+        .brand-title {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #8c8c8c;
+            margin-top: 5px;
+        }
+
+        /* Hlavní nadpisy sekcí */
+        .section-title {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 3px solid #ffffff;
+        }
+
+        /* Grid pro investiční balíčky */
+        .products-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-bottom: 40px;
         }
 
-        .product-card {
-            background-color: #1a1a1a;
-            border: 1px solid #2d2d2d;
-            border-radius: 4px;
-            padding: 20px;
+        .product-item {
+            background-color: #161616;
+            border: 1px solid #262626;
+            border-radius: 6px;
+            padding: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: border-color 0.3s;
+            transition: all 0.2s ease-in-out;
         }
 
-        .product-card:hover {
+        .product-item:hover {
             border-color: #444444;
+            background-color: #1c1c1c;
         }
 
-        .product-info h3 {
+        .product-details {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .product-details h3 {
             color: #ffffff;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .product-info p {
-            color: #aaaaaa;
-            font-size: 13px;
-            line-height: 1.4;
-            margin-bottom: 10px;
-        }
-
-        .product-price {
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 15px;
-        }
-
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quantity-selector input {
-            width: 60px;
-            background-color: #262626;
-            border: 1px solid #3d3d3d;
-            color: #ffffff;
-            padding: 8px;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        /* Souhrn objednávky (Košík) */
-        .summary-box {
-            background-color: #1a1a1a;
-            border: 1px solid #2d2d2d;
-            padding: 20px;
-            border-radius: 4px;
-            margin-bottom: 30px;
-        }
-
-        .summary-box h2 {
             font-size: 18px;
-            color: #ffffff;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #2d2d2d;
-            padding-bottom: 10px;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
 
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
+        .product-details p {
+            color: #999999;
             font-size: 14px;
         }
 
-        .summary-row.total {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-top: 15px;
-            border-top: 1px solid #2d2d2d;
-            padding-top: 15px;
+        .product-action {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
-        /* Kontaktní formulář */
-        .form-box {
-            background-color: #1a1a1a;
-            border: 1px solid #2d2d2d;
-            padding: 20px;
+        .product-cost {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+
+        .input-qty {
+            width: 70px;
+            background-color: #222222;
+            border: 1px solid #3a3a3a;
+            color: #ffffff;
+            padding: 10px;
             border-radius: 4px;
-            margin-bottom: 30px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .input-qty:focus {
+            border-color: #ffffff;
+            outline: none;
+        }
+
+        /* Moduly pro Souhrn a Data */
+        .grid-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .meta-panel {
+            background-color: #161616;
+            border: 1px solid #262626;
+            padding: 25px;
+            border-radius: 6px;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+
+        .meta-row.highlight {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            border-top: 1px solid #262626;
+            padding-top: 12px;
+            margin-top: 15px;
+        }
+
+        /* Formulářové prvky */
+        .form-field {
+            margin-bottom: 15px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8c8c8c;
+            margin-bottom: 6px;
+        }
+
+        .form-field input {
+            width: 100%;
+            background-color: #222222;
+            border: 1px solid #3a3a3a;
+            color: #ffffff;
+            padding: 11px 14px;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-field input:focus {
+            border-color: #ffffff;
+            outline: none;
+        }
+
+        /* Odesílací tlačítko */
+        .submit-container {
+            text-align: center;
+        }
+
+        .action-button {
+            width: 100%;
+            background-color: #ffffff;
+            color: #111111;
+            border: none;
+            padding: 18px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .action-button:hover {
+            background-color: #dddddd;
+        }
+
+        .warning-text {
+            color: #ff4444;
+            font-size: 13px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 11px;
+            color: #555555;
+            border-top: 1px solid #2d2d2d;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <header>
+        <div class="brand-box">
+            <img src="./logo.png" alt="[ SROVNALIK FINANCE ]" class="app-logo" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
+            <div id="alt-title" style="display:none;" class="brand-title">Srovnalik</div>
+            <div class="brand-subtitle">Finance & Investment Solutions</div>
+        </div>
+    </header>
+
+    <main>
+        <h2 class="section-title">Nabídka investičních balíčků</h2>
+        <div class="products-list" id="products-target
